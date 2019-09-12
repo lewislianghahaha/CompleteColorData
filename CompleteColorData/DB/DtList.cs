@@ -32,7 +32,7 @@ namespace CompleteColorData.DB
                         break;
                     case 3:
                         dc.ColumnName = "色母量";
-                        dc.DataType = Type.GetType("System.Decimal"); 
+                        dc.DataType = Type.GetType("System.String"); 
                         break;
                 }
                 dt.Columns.Add(dc);
@@ -47,67 +47,71 @@ namespace CompleteColorData.DB
         public DataTable Get_ImportOldtempdt()
         {
             var dt = new DataTable();
-            for (var i = 0; i < 14; i++)
+            for (var i = 0; i < 15; i++)
             {
                 var dc = new DataColumn();
 
                 switch (i)
                 {
                     case 0:
+                        dc.ColumnName = "ID";
+                        dc.DataType = Type.GetType("System.Int32");
+                        break;
+                    case 1:
                         dc.ColumnName = "车厂";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 1:
+                    case 2:
                         dc.ColumnName = "颜色代码";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 2:
+                    case 3:
                         dc.ColumnName = "颜色名称";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 3:
+                    case 4:
                         dc.ColumnName = "适用车型";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 4:
+                    case 5:
                         dc.ColumnName = "品牌";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 5:
+                    case 6:
                         dc.ColumnName = "涂层";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 6:
+                    case 7:
                         dc.ColumnName = "差异色";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 7:
+                    case 8:
                         dc.ColumnName = "年份";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 8:
+                    case 9:
                         dc.ColumnName = "制作日期";
                         dc.DataType = Type.GetType("System.DateTime"); 
                         break;
-                    case 9:
+                    case 10:
                         dc.ColumnName = "制作人";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 10:
+                    case 11:
                         dc.ColumnName = "色母";
                         dc.DataType=Type.GetType("System.String");
                         break;
-                    case 11:
+                    case 12:
                         dc.ColumnName = "色母名称";
                         dc.DataType = Type.GetType("System.String");
                         break;
-                    case 12:
-                        dc.ColumnName = "量(克)";
-                        dc.DataType = Type.GetType("System.Decimal"); 
-                        break;
                     case 13:
+                        dc.ColumnName = "量";
+                        dc.DataType = Type.GetType("System.Double"); 
+                        break;
+                    case 14:
                         dc.ColumnName = "累计量(克)";
-                        dc.DataType = Type.GetType("System.Decimal");
+                        dc.DataType = Type.GetType("System.Double");
                         break;
                 }
                 dt.Columns.Add(dc);
@@ -122,7 +126,7 @@ namespace CompleteColorData.DB
         public DataTable ExportNewtempdt()
         {
             var dt = new DataTable();
-            for (var i = 0; i < 12; i++)
+            for (var i = 0; i < 17; i++)
             {
                 var dc = new DataColumn();
 
@@ -137,42 +141,62 @@ namespace CompleteColorData.DB
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 2:
-                        dc.ColumnName = "颜色描述";
+                        dc.ColumnName = "涂层";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 3:
-                        dc.ColumnName = "二维码";
+                        dc.ColumnName = "颜色描述";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 4:
-                        dc.ColumnName = "内部色号";
+                        dc.ColumnName = "二维码";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 5:
-                        dc.ColumnName = "标准色号";
+                        dc.ColumnName = "内部色号";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 6:
-                        dc.ColumnName = "版本日期";
+                        dc.ColumnName = "主配方色号(差异色)";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 7:
-                        dc.ColumnName = "层";
+                        dc.ColumnName = "颜色组别";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 8:
-                        dc.ColumnName = "色母编码";
+                        dc.ColumnName = "标准色号";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 9:
-                        dc.ColumnName = "色母量(KG)";
+                        dc.ColumnName = "RGBValue";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 10:
-                        dc.ColumnName = "累积量(KG)";
+                        dc.ColumnName = "版本日期";
                         dc.DataType = Type.GetType("System.String");
                         break;
                     case 11:
+                        dc.ColumnName = "层";
+                        dc.DataType = Type.GetType("System.String");
+                        break;
+                    case 12:
+                        dc.ColumnName = "色母编码";
+                        dc.DataType = Type.GetType("System.String");
+                        break;
+                    case 13:
+                        dc.ColumnName = "色母名称";
+                        dc.DataType = Type.GetType("System.String");
+                        break;
+                    case 14:
+                        dc.ColumnName = "色母量(KG)";
+                        dc.DataType = Type.GetType("System.String");
+                        break;
+                    case 15:
+                        dc.ColumnName = "累积量(KG)";
+                        dc.DataType = Type.GetType("System.String");
+                        break;
+                    case 16:
                         dc.ColumnName = "制作人";
                         dc.DataType = Type.GetType("System.String");
                         break;

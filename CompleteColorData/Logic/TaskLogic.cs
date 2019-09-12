@@ -6,7 +6,7 @@ namespace CompleteColorData.Logic
     {
         ImportDt importDt=new ImportDt();
         GenerateDt generateDt=new GenerateDt();
-        ExportDt exportDt=new ExportDt();
+        ExportDt exportDt = new ExportDt();
 
         #region 变量
 
@@ -84,11 +84,11 @@ namespace CompleteColorData.Logic
                     break;
                 //运算
                 case 2:
-
+                    GenerateTemp(_olddt, _newdt);
                     break;
                 //导出
                 case 3:
-
+                    ExportDtToExcel(_fileAddress,_resultTable);
                     break;
             }
         }
@@ -99,7 +99,7 @@ namespace CompleteColorData.Logic
         /// <param name="fileAddress"></param>
         private void OpenOldExcelImporttoDt(string fileAddress)
         {
-            
+            _resultolddt = importDt.OpenExcelImporttoDt(0,fileAddress);
         }
 
         /// <summary>
@@ -108,10 +108,29 @@ namespace CompleteColorData.Logic
         /// <param name="fileAddress"></param>
         private void OpenNewExcelImporttoDt(string fileAddress)
         {
-            
+            _resultnewdt = importDt.OpenExcelImporttoDt(1,fileAddress);
         }
 
+        /// <summary>
+        /// 运算
+        /// </summary>
+        /// <param name="sourceolddt"></param>
+        /// <param name="sourcenewdt"></param>
+        private void GenerateTemp(DataTable sourceolddt, DataTable sourcenewdt)
+        {
+            _resultTable = generateDt.GenerateTemp(sourceolddt, sourcenewdt);
+            _resultMark = _resultTable.Rows.Count > 0;
+        }
 
+        /// <summary>
+        /// 导出DT（按照新数据模板方式）
+        /// </summary>
+        /// <param name="fileAddress"></param>
+        /// <param name="exportdt"></param>
+        private void ExportDtToExcel(string fileAddress,DataTable exportdt)
+        {
+            _resultMark = exportDt.ExportDtToExcel(fileAddress, exportdt);
+        }
 
     }
 }

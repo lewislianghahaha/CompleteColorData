@@ -15,24 +15,27 @@ namespace CompleteColorData.Logic
         /// <summary>
         /// 打开及导入至DT
         /// </summary>
+        /// <param name="importid">0:导入旧数据库模板 1:导入新数据库模板</param>
         /// <param name="fileAddress"></param>
         /// <returns></returns>
-        public DataTable OpenExcelImporttoDt(string fileAddress)
+        public DataTable OpenExcelImporttoDt(int importid,string fileAddress)
         {
-            var dt = new DataTable();
+            var resultdt = new DataTable();
             try
             {
                 //使用NPOI技术进行导入EXCEL至DATATABLE
-                var importExcelDt = OpenExcelToDataTable(0,fileAddress);
+                var importExcelDt = OpenExcelToDataTable(importid,fileAddress);
                 //将从EXCEL过来的记录集为空的行清除
-                dt = RemoveEmptyRows(importExcelDt);
+                var dt = RemoveEmptyRows(importExcelDt);
+                //将ID值进行添加(注:旧数据模板才适用)
+                resultdt = importid == 0 ? AddIdValue(dt) : dt;
             }
             catch (Exception)
             {
-                dt.Rows.Clear();
-                dt.Columns.Clear();
+                resultdt.Rows.Clear();
+                resultdt.Columns.Clear();
             }
-            return dt;
+            return resultdt;
         }
 
         /// <summary>
@@ -43,9 +46,10 @@ namespace CompleteColorData.Logic
         /// <returns></returns>
         private DataTable OpenExcelToDataTable(int importid,string fileAddress)
         {
+            //定义EXCEL列数
+            var colnum = 0;
             IWorkbook wk;
-            //定义ID变量
-            var id = 1;
+
             //创建表标题
             var dt = new DataTable();
 
@@ -68,32 +72,27 @@ namespace CompleteColorData.Logic
                     var row = sheet.GetRow(r);
                     if (row == null) continue;
 
-                    //读取每列(固定了共列值37)
-                    for (var j = 0; j < 37/*row.Cells.Count*/; j++)
+                    colnum = importid == 0 ? 15 : 4;
+
+                    //读取每列
+                    for (var j = 0; j < colnum/*row.Cells.Count*/; j++)
                     {
-                        if (j == 0)
+                        //循环获取行中的单元格
+                        var cell = row.GetCell(j);
+                        var cellValue = GetCellValue(cell);
+                        if (cellValue == string.Empty)
                         {
-                            dr[0] = id;
+                            continue;
                         }
                         else
                         {
-                            //循环获取行中的单元格
-                            var cell = row.GetCell(j);
-                            var cellValue = GetCellValue(cell);
-                            if (cellValue == string.Empty)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                dr[j] = cellValue;
-                            }
+                            dr[j] = cellValue;
+                        }
 
-                            //全为空就不取
-                            if (dr[j].ToString() != "")
-                            {
-                                result = true;
-                            }
+                        //全为空就不取
+                        if (dr[j].ToString() != "")
+                        {
+                            result = true;
                         }
                     }
 
@@ -102,8 +101,6 @@ namespace CompleteColorData.Logic
                         //把每行增加到DataTable
                         dt.Rows.Add(dr);
                     }
-                    //自增ID值
-                    id++;
                 }
             }
             return dt;
@@ -189,6 +186,45 @@ namespace CompleteColorData.Logic
                 dt.Rows.Remove(removeList[i]);
             }
             return dt;
+        }
+
+        /// <summary>
+        /// 将DT中的ID值按情况进行添加(注:当要导入旧数据库模板记录时才使用)
+        /// </summary>
+        /// <param name="sourcedt"></param>
+        /// <returns></returns>
+        private DataTable AddIdValue(DataTable sourcedt)
+        {
+            //ID中间值
+            var tempid=0;
+            //定义ID值(每一行完成后,会进行清空)
+            var id = 0;
+
+            for (var i = 0; i < sourcedt.Rows.Count; i++)
+            {
+                //当第一行时,ID值为1
+                if (i == 0)
+                {
+                    id = tempid = 1;
+                }
+                //当检测到‘车厂’列为空时,此行的ID列值为tempid
+                else if (Convert.ToString(sourcedt.Rows[i][1])=="")
+                {
+                    id = tempid;
+                }
+                //当检测到‘车厂’列不为空时,此行的ID列值为tempid++
+                else if (Convert.ToString(sourcedt.Rows[i][1])!="")
+                {
+                    id = tempid = tempid + 1;
+                }
+
+                sourcedt.BeginInit();
+                sourcedt.Rows[i][0] = id;
+                sourcedt.EndInit();
+                //当每行循环完成后将ID清空
+                id = 0;
+            }
+            return sourcedt;
         }
     }
 }
