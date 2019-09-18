@@ -37,7 +37,7 @@ namespace CompleteColorData.Logic
                     newrow[0] = rows[0];            //制造商
                     newrow[1] = rows[1];            //标准色号
                     newrow[2] = rows[2];            //色母编码
-                    newrow[3] = rows[3];            //色母量
+                    newrow[3] = Math.Round(Convert.ToDouble(rows[3])); //色母量
                     newdt.Rows.Add(newrow);
                 }
 
@@ -48,7 +48,10 @@ namespace CompleteColorData.Logic
                     var newrow = olddt.NewRow();
                     for (var j = 0; j < sourceolddt.Columns.Count; j++)
                     {
-                        newrow[j] = sourceolddt.Rows[i][j];
+                        //将‘量’转换取整
+                        newrow[j] = j == 13
+                            ? Math.Round(Convert.ToDouble(sourceolddt.Rows[i][j]), 0)
+                            : sourceolddt.Rows[i][j];
                     }
                     olddt.Rows.Add(newrow);
                 }
